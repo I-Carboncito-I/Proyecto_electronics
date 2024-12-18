@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="es" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity6">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gestión de usuarios</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    /* Fondo multicolor con gradiente dinámico */
+    body {
+      background: linear-gradient(
+              45deg,
+              #9c9494,
+              #000000,
+              #9c9494,
+              #000000,
+              #9c9494
+      );
+      background-size: 400% 400%;
+      animation: gradientBG 5s ease infinite;
+      font-family: 'Roboto', sans-serif;
+      color: #000000;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+    }
+
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Títulos con efectos coloridos */
+    h2, h4 {
+      text-align: center;
+      font-weight: bold;
+      color: #eceae5;
+      text-shadow:
+              0 0 35px rgb(46, 21, 19),
+              2px 2px 4px rgb(67, 44, 44);
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+    }
+
+    /* Contenedor principal */
+    .container {
+      background: rgba(119, 109, 109, 0.1);
+      backdrop-filter: blur(50px);
+      border-radius: 50px;
+      box-shadow:
+              0 10px 30px rgba(0, 0, 0, 0.3),
+              0 0 20px rgba(255, 255, 255, 0.2);
+      padding: 50px;
+      margin-top: 30px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 100%;
+      max-width: 1200px;
+      text-align: center;
+    }
+
+    /* Tabla con fondo blanco */
+    .table {
+      background: #ffffff;
+      border-radius: 10px;
+      overflow: hidden;
+      margin: 0 auto;
+    }
+
+    /* Títulos de la tabla */
+    .table thead {
+      background: linear-gradient(135deg, #000000, #000000);
+      color: #000000;
+    }
+
+    /* Alineación de la tabla y celdas */
+    .table td, .table th {
+      color: #000000;
+      vertical-align: middle;
+      text-align: center;
+    }
+
+    /* Hacer que las filas de la tabla no se desborden */
+    .table tbody tr {
+      transition: all 0.3s ease;
+    }
+
+    .table tbody tr:hover {
+      background-color: rgba(78, 205, 196, 0.2);
+      transform: scale(1.02);
+    }
+
+    /* Botones con colores vibrantes */
+    .btn {
+      position: relative;
+      overflow: hidden;
+      border: 2px solid;
+      transition: all 0.3s ease;
+      margin: 5px;
+      text-transform: uppercase;
+      font-weight: bold;
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 10px 20px;
+      white-space: nowrap;
+    }
+
+    /* Botón de detalle - color celeste con neón */
+    .btn-light {
+      background-color: #26d0ce;
+      border-color: #26d0ce;
+      color: #ffffff;
+    }
+
+    .btn-light:hover {
+      background-color: #1a8a8a;
+      color: #ffffff;
+      box-shadow: 0 0 20px #26d0ce, 0 0 30px #26d0ce, 0 0 40px #26d0ce;
+    }
+
+    /* Botón de eliminar - color rojo con neón */
+    .btn-danger {
+      background-color: #ff6b6b;
+      border-color: #ff6b6b;
+      color: #ffffff;
+    }
+
+    .btn-danger:hover {
+      background-color: #ff4f4f;
+      color: #ffffff;
+      box-shadow: 0 0 20px #ff6b6b, 0 0 30px #ff6b6b, 0 0 40px #ff6b6b;
+    }
+
+    /* Botón de actualizar - color dorado con neón */
+    .btn-info {
+      background-color: #ffd700;
+      border-color: #ffd700;
+      color: #000000;
+    }
+
+    .btn-info:hover {
+      background-color: #e6c200;
+      color: #000000;
+      box-shadow: 0 0 20px #ffd700, 0 0 30px #ffd700, 0 0 40px #ffd700;
+    }
+
+    /* Botón Agregar Usuario - color con neón */
+    .btn-primary {
+      background-color: #007bff;
+      border-color: #007bff;
+      color: #ffffff;
+      text-align: center;
+    }
+
+    .btn-primary:hover {
+      background-color: #0056b3;
+      color: #ffffff;
+      box-shadow: 0 0 20px #007bff, 0 0 30px #007bff, 0 0 40px #007bff;
+    }
+
+
+  </style>
+</head>
+
+
+<body>
+<div th:insert="reutilizables/barra_navegacion :: barraNavegacion"></div>
+<div class="container">
+  <div class="row">
+    <div class="col-md-12 mt-3 mb-2">
+      <h2>Gestión de usuarios</h2>
+    </div>
+    <h4 th:text="'Bienvenido: ' + ${#authentication.name}"></h4>
+
+    <div class="col-md-12 mt-3 mb-2">
+      <form th:action="@{/manage/logout}" method="post">
+        <span sec:authorize="hasRole('ADMIN')">
+          <button type="button" class="btn btn-primary mt-3" onclick="location.href='/manage/add'">
+            Agregar usuario
+          </button>
+        </span>
+
+        <button type="submit" class="btn btn-danger mt-3">
+          Cerrar sesión
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <table class="table table-hover">
+    <thead>
+    <tr>
+      <th>Código</th>
+      <th>Nombres</th>
+      <th>Apellidos</th>
+      <th>Email</th>
+      <th>Opciones</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+      <td th:text="${user.id()}"></td>
+      <td th:text="${user.firstName()}"></td>
+      <td th:text="${user.lastName()}"></td>
+      <td th:text="${user.email()}"></td>
+      <td>
+        <a th:href="@{/manage/detail/{id}(id=${user.id()})}" class="btn btn-light">Ver detalle</a>
+
+        <span sec:authorize="hasRole('ADMIN')">
+            <form th:action="@{/manage/delete/{id}(id=${user.id()})}" method="post" style="display:inline;">
+              <button type="submit" class="btn btn-danger" onclick="return confirmDeletion('${user.firstName()} ${user.lastName()}');">Eliminar</button>
+            </form>
+
+          <!-- Botón actualizar que redirige a la ruta de actualización -->
+            <a th:href="@{/manage/update/{id}(id=${user.id()})}" class="btn btn-info">Actualizar</a>
+        </span>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+
+<script>
+  function confirmDeletion(userName) {
+    return confirm('¿Estás seguro de que deseas eliminar al usuario?');
+  }
+</script>
+
+</body>
+</html>

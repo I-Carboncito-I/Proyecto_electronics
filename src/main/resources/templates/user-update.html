@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Actualizar Usuario</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+  <style>
+    /* Fondo con gradiente animado */
+    body {
+      background: linear-gradient(45deg, #9c9494, #000000, #9c9494, #000000, #9c9494);
+      background-size: 400% 400%;
+      animation: gradientBG 5s ease infinite;
+      font-family: 'Roboto', sans-serif;
+      color: #000000;
+      min-height: 100vh;
+      display: flex;
+      justify-content: flex-start;
+      flex-direction: column;
+    }
+
+    /* Animación para el fondo */
+    @keyframes gradientBG {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    /* Estilos para el formulario */
+    .container {
+      margin-top: 125px;
+    }
+
+    /* Estilo para los datos dentro de un cuadro */
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 30px;
+      border-radius: 10px;
+    }
+
+    h3 {
+      color: #000000;
+      text-align: center;
+      margin-bottom: 30px;
+    }
+
+    .form-control {
+      border-radius: 10px;
+      font-size: 1rem;
+    }
+
+    .row label {
+      font-weight: bold;
+    }
+
+    /* Estilos para el botón "Actualizar" */
+    .btn-actualizar {
+      background-color: #28a745;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      font-size: 1.1rem;
+      padding: 10px 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 3px #28a745, 0 0 5px #28a745, 0 0 10px #28a745;
+    }
+
+    .btn-actualizar:hover {
+      background-color: #218838;
+      box-shadow: 0 0 5px #28a745, 0 0 10px #28a745, 0 0 15px #28a745;
+      color: #f1c40f;
+    }
+
+    /* Estilos para el botón regresar con efecto de neón */
+    .btn-regresar {
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 3px;
+      font-size: 1.1rem;
+      padding: 10px 20px;
+      transition: all 0.3s ease;
+      box-shadow: 0 0 3px #3498db, 0 0 5px #3498db, 0 0 10px #3498db;
+    }
+
+    .btn-regresar:hover {
+      background-color: #2980b9;
+      box-shadow: 0 0 5px #3498db, 0 0 10px #3498db, 0 0 15px #3498db;
+      color: #f1c40f;
+    }
+
+    /* Estilo para los botones alineados horizontalmente */
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+
+<div th:insert="~{reutilizables/barra_navegacion :: barraNavegacion}"></div>
+
+<div class="container">
+  <div class="form-container">
+    <h3>Actualizar Usuario</h3>
+    <form th:action="@{/manage/update}" method="post" th:object="${userDetailDto}" id="updateForm">
+
+      <div class="mb-3 row">
+        <label for="userId" class="col-sm-3">ID</label>
+        <div class="col-sm-9">
+          <input type="text" readonly id="userId" class="form-control" th:field="*{id}">
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="name" class="col-sm-3">Usuario</label>
+        <div class="col-sm-9">
+          <input type="text" id="name" class="form-control" th:field="*{username}">
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="email" class="col-sm-3">Email</label>
+        <div class="col-sm-9">
+          <input type="email" id="email" class="form-control" th:field="*{email}">
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="firstName" class="col-sm-3">Nombres</label>
+        <div class="col-sm-9">
+          <input type="text" id="firstName" class="form-control" th:field="*{firstName}">
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="lastName" class="col-sm-3">Apellido</label>
+        <div class="col-sm-9">
+          <input type="text" id="lastName" class="form-control" th:field="*{lastName}">
+        </div>
+      </div>
+
+      <div class="mb-3 row">
+        <label for="role" class="col-sm-3">Rol</label>
+        <div class="col-sm-9">
+          <select id="role" class="form-control" th:field="*{role}">
+            <option value="ADMIN" th:selected="${userDetailDto.role == 'ADMIN'}">ADMIN</option>
+            <option value="OPERATOR" th:selected="${userDetailDto.role == 'OPERATOR'}">OPERATOR</option>
+          </select>
+        </div>
+      </div>
+      <br>
+      <div class="mb-3 row">
+        <div class="col-sm-4 offset-sm-3 btn-group">
+          <!-- Botón "Actualizar" abre el modal -->
+          <button type="button" class="btn btn-success btn-actualizar" data-bs-toggle="modal" data-bs-target="#confirmModal">
+            Actualizar
+          </button>
+          <!-- Botón "Regresar" redirige -->
+          <button type="button" id="btnRegresar" class="btn btn-primary w-25 btn-regresar" onclick="location.href='/manage/start'">
+            Regresar
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Modal de confirmación -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="confirmModalLabel">Confirmar actualización</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        ¿Estás seguro de que deseas actualizar este usuario?
+      </div>
+      <div class="modal-footer">
+        <!-- Botón "Cancelar" cierra el modal -->
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+        <!-- Botón "Confirmar" envía el formulario -->
+        <button type="button" class="btn btn-primary" id="confirmUpdateButton">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Enviar el formulario solo después de confirmar
+  document.getElementById('confirmUpdateButton').addEventListener('click', function () {
+    document.getElementById('updateForm').submit();
+  });
+</script>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+</body>
+</html>
